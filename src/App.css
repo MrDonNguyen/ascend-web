@@ -1,50 +1,15 @@
-/* General App Styling */
-.App {
-  text-align: center;
-  background-color: #f8f9fa;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: Arial, sans-serif;
-}
-
-/* Header Styling */
-.App-header {
-  background-color: #007bff;
+.delete-button {
+  background-color: #ff4d4d;
   color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  max-width: 600px;
-}
-
-/* Title */
-h1 {
-  font-size: 2.5em;
-  margin-bottom: 10px;
-}
-
-/* Description */
-p {
-  font-size: 1.2em;
-}
-
-/* Call-to-Action Button */
-.cta-button {
-  background-color: #ffcc00;
-  color: black;
   border: none;
-  padding: 10px 20px;
-  font-size: 1.2em;
+  padding: 5px 10px;
+  font-size: 0.9em;
+  margin-left: 10px;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 20px;
   transition: background-color 0.3s;
 }
 
-.cta-button:hover {
-  background-color: #ffaa00;
+.delete-button:hover {
+  background-color: #cc0000;
 }
