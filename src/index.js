@@ -1,15 +1,12 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom/client"; // Use createRoot in React 18+
 import App from "./App";
-import "./index.css";
-import reportWebVitals from "./reportWebVitals"; // ✅ Import this if keeping reportWebVitals()
+import "./index.css"; // Ensure styles are applied globally
 
+// Initialize React
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
 );
-
-// ✅ This line is now correct
-reportWebVitals(console.log); // Logs performance data in console

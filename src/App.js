@@ -1,35 +1,24 @@
-import { useState, useEffect } from "react";
-import MeetupForm from "./MeetupForm";
-import { db } from "./firebase";
-import { collection, getDocs, onSnapshot, doc, deleteDoc } from "firebase/firestore";
-import "./App.css";
+import React, { useState, useEffect } from "react";
+import { db } from "./firebase";  // Import Firestore
+import { collection, getDocs } from "firebase/firestore";  // Firestore methods
+import './App.css'; // Make sure the styles are imported correctly
 
 function App() {
   const [meetups, setMeetups] = useState([]);
 
-  // Fetch meetups from Firestore in real-time
+  // Fetch meetups from Firestore when the component loads
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "meetups"), (snapshot) => {
-      const meetupList = snapshot.docs.map((doc) => ({
+    const fetchMeetups = async () => {
+      const querySnapshot = await getDocs(collection(db, "meetups"));
+      const meetupList = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()
       }));
       setMeetups(meetupList);
-    });
+    };
 
-    return () => unsubscribe(); // Cleanup Firestore listener
+    fetchMeetups();
   }, []);
-
-  // Function to delete a meetup
-  const handleDelete = async (id) => {
-    try {
-      await deleteDoc(doc(db, "meetups", id)); // Delete from Firestore
-      alert("Meetup deleted successfully!");
-    } catch (error) {
-      console.error("Error deleting meetup:", error);
-      alert("Failed to delete meetup. Try again.");
-    }
-  };
 
   return (
     <div className="App">
@@ -38,14 +27,11 @@ function App() {
         <p>Connect with people at your favorite cafes in Westminster!</p>
       </header>
 
-      <MeetupForm />
-
       <h2>Upcoming Meetups</h2>
       <ul>
         {meetups.map((meetup) => (
           <li key={meetup.id}>
             <strong>{meetup.name}</strong> at {meetup.location} on {meetup.date} at {meetup.time}
-            <button className="delete-button" onClick={() => handleDelete(meetup.id)}>❌ Delete</button>
           </li>
         ))}
       </ul>
@@ -53,5 +39,4 @@ function App() {
   );
 }
 
-// ✅ Ensure this is present at the end
 export default App;
