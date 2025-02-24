@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import MeetupForm from "./MeetupForm";
-import { db } from "./firebase"; 
-import { collection, getDocs, onSnapshot, doc, deleteDoc } from "firebase/firestore"; 
+import { db } from "./firebase";
+import { collection, getDocs, onSnapshot, doc, deleteDoc } from "firebase/firestore";
 import "./App.css";
 
 function App() {
@@ -37,9 +37,9 @@ function App() {
         <h1>Welcome to Ascend Meetups</h1>
         <p>Connect with people at your favorite cafes in Westminster!</p>
       </header>
-      
+
       <MeetupForm />
-      
+
       <h2>Upcoming Meetups</h2>
       <ul>
         {meetups.map((meetup) => (
@@ -53,4 +53,5 @@ function App() {
   );
 }
 
+// ✅ Ensure this is present at the end
 export default App;
