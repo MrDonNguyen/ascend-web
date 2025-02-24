@@ -1,10 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";  // Import Firestore
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-// Your Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,  // Securely reference the API key from .env
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "ascend-meetups.firebaseapp.com",
   projectId: "ascend-meetups",
   storageBucket: "ascend-meetups.appspot.com",
@@ -13,14 +12,8 @@ const firebaseConfig = {
   measurementId: "G-RKFTWYK3BV"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize Firestore
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-// Initialize Analytics
-const analytics = getAnalytics(app);
-
-// Export Firestore and Analytics so other files can use them
-export { app, analytics, db };
+export { app, db, auth };

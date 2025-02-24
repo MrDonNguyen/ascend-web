@@ -1,15 +1,25 @@
-.delete-button {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  font-size: 0.9em;
-  margin-left: 10px;
+/* ✅ DatePicker Styles */
+.datepicker-input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 1rem;
+  transition: border 0.3s ease-in-out;
 }
 
-.delete-button:hover {
-  background-color: #cc0000;
+.datepicker-input:focus {
+  border-color: #0073e6;
+  outline: none;
+}
+
+/* ✅ Time Picker (Dropdown) */
+.time-picker {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
 }
