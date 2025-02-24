@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { db } from "./firebase"; 
 import { collection, addDoc } from "firebase/firestore"; 
-import DatePicker from "react-datepicker";  // ✅ Import React Datepicker
-import "react-datepicker/dist/react-datepicker.css";  // ✅ Import CSS
+import DatePicker from "react-datepicker"; 
+import "react-datepicker/dist/react-datepicker.css"; 
 
 function MeetupForm() {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
-  const [date, setDate] = useState(null);  // Use null instead of empty string
+  const [date, setDate] = useState(null); 
   const [time, setTime] = useState(""); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -29,7 +29,7 @@ function MeetupForm() {
       await addDoc(collection(db, "meetups"), {
         name: name.trim(),
         location: location.trim(),
-        date: date.toISOString().split("T")[0], // Store as YYYY-MM-DD
+        date: date.toISOString().split("T")[0], 
         time: time.trim(),
       });
 
@@ -49,14 +49,15 @@ function MeetupForm() {
 
   return (
     <form onSubmit={handleSubmit} className="form-container">
-      <h2 className="form-title">Create a Meetup</h2>
+      <h2 className="form-title">📅 Create a Meetup</h2>
 
       {/* ✅ Display error messages */}
       {error && <p className="error-message">{error}</p>}
 
       {/* ✅ Meetup Name Input */}
-      <label>Meetup Name</label>
+      <label htmlFor="meetup-name">Meetup Name</label>
       <input
+        id="meetup-name"
         type="text"
         placeholder="Enter meetup name"
         value={name}
@@ -64,55 +65,54 @@ function MeetupForm() {
       />
 
       {/* ✅ Location Input */}
-      <label>Location</label>
+      <label htmlFor="location">Location</label>
       <input
+        id="location"
         type="text"
         placeholder="Enter location"
         value={location}
         onChange={(e) => setLocation(e.target.value)}
       />
 
-      {/* ✅ Date Picker (Replaces default input) */}
-      <label>Date</label>
+      {/* ✅ Date Picker (Calendar Dropdown) */}
+      <label htmlFor="date">Date</label>
       <DatePicker
+        id="date"
         selected={date}
         onChange={(date) => setDate(date)}
         dateFormat="yyyy-MM-dd"
         className="datepicker-input"
-        placeholderText="Select a date"
+        placeholderText="📆 Select a date"
         isClearable
         showYearDropdown
         scrollableYearDropdown
         yearDropdownItemNumber={15}
       />
 
-      {/* ✅ Time Picker (Dropdown select) */}
-      <label>Time</label>
+      {/* ✅ Time Picker (Dropdown Select) */}
+      <label htmlFor="time">Time</label>
       <select 
+        id="time"
         value={time} 
         onChange={(e) => setTime(e.target.value)} 
         className="time-picker"
       >
-        <option value="">Select a time</option>
-        <option value="08:00">08:00 AM</option>
-        <option value="09:00">09:00 AM</option>
-        <option value="10:00">10:00 AM</option>
-        <option value="11:00">11:00 AM</option>
-        <option value="12:00">12:00 PM</option>
-        <option value="13:00">01:00 PM</option>
-        <option value="14:00">02:00 PM</option>
-        <option value="15:00">03:00 PM</option>
-        <option value="16:00">04:00 PM</option>
-        <option value="17:00">05:00 PM</option>
-        <option value="18:00">06:00 PM</option>
-        <option value="19:00">07:00 PM</option>
-        <option value="20:00">08:00 PM</option>
-        <option value="21:00">09:00 PM</option>
+        <option value="">⏰ Select a time</option>
+        {Array.from({ length: 24 }, (_, i) => {
+          const hour = i < 10 ? `0${i}` : `${i}`;
+          const amPm = i < 12 ? "AM" : "PM";
+          const displayHour = i === 0 ? "12" : i > 12 ? i - 12 : i;
+          return (
+            <option key={hour} value={`${hour}:00`}>
+              {displayHour}:00 {amPm}
+            </option>
+          );
+        })}
       </select>
 
       {/* ✅ Submit Button */}
       <button type="submit" disabled={loading}>
-        {loading ? "Submitting..." : "Add Meetup"}
+        {loading ? "Submitting..." : "➕ Add Meetup"}
       </button>
     </form>
   );
