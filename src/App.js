@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { db } from "./firebase"; 
+import { db, auth, signInWithGoogle, logout } from "./firebase"; // ✅ Import Firebase Authentication
 import { collection, onSnapshot, doc, deleteDoc } from "firebase/firestore"; 
+import { onAuthStateChanged } from "firebase/auth"; // ✅ Listen for Auth State Changes
 import "./App.css"; 
 import MeetupForm from "./MeetupForm"; 
 
@@ -8,6 +9,16 @@ function App() {
   const [meetups, setMeetups] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null); // ✅ Track authenticated user
+
+  // ✅ Listen for Firebase Authentication State
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribeAuth(); // ✅ Cleanup listener
+  }, []);
 
   // ✅ Fetch meetups with real-time updates
   useEffect(() => {
@@ -54,10 +65,22 @@ function App() {
       <header className="App-header">
         <h1>🌟 Welcome to Ascend Meetups</h1>
         <p>Connect with people at your favorite cafes in Westminster!</p>
+
+        {/* ✅ Show Google Sign-In / Logout */}
+        {!user ? (
+          <button onClick={signInWithGoogle} className="google-signin-button">
+            🔑 Sign in with Google
+          </button>
+        ) : (
+          <div className="user-info">
+            <p>👤 {user.displayName}</p>
+            <button onClick={logout} className="logout-button">🚪 Sign Out</button>
+          </div>
+        )}
       </header>
 
-      {/* ✅ Meetup Form */}
-      <MeetupForm /> 
+      {/* ✅ Only Show Meetup Form if User is Signed In */}
+      {user ? <MeetupForm /> : <p className="signin-message">🔒 Sign in to create a meetup</p>}
 
       {/* ✅ Upcoming Meetups Section */}
       <main>
@@ -72,9 +95,11 @@ function App() {
               <li key={meetup.id} className="meetup-item">
                 <strong>{meetup.name}</strong> at {meetup.location} 
                 <br /> {meetup.date} at {meetup.time}
-                <button className="delete-button" onClick={() => handleDelete(meetup.id)}>
-                  ❌ Delete
-                </button>
+                {user && (
+                  <button className="delete-button" onClick={() => handleDelete(meetup.id)}>
+                    ❌ Delete
+                  </button>
+                )}
               </li>
             ))
           ) : (

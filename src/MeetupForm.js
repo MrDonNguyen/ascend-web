@@ -1,21 +1,29 @@
 import { useState } from "react";
-import { db } from "./firebase"; 
-import { collection, addDoc } from "firebase/firestore"; 
-import DatePicker from "react-datepicker"; 
-import "react-datepicker/dist/react-datepicker.css"; 
+import { db, auth } from "./firebase"; // ✅ Import Firebase Authentication
+import { collection, addDoc } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth"; // ✅ Firebase Auth Hook
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function MeetupForm() {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
-  const [date, setDate] = useState(null); 
-  const [time, setTime] = useState(""); 
+  const [date, setDate] = useState(null);
+  const [time, setTime] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [user] = useAuthState(auth); // ✅ Check if user is authenticated
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Validate inputs before submission
+    // ✅ Prevent submission if user is not signed in
+    if (!user) {
+      setError("🔒 You must sign in to create a meetup!");
+      return;
+    }
+
+    // ✅ Validate input fields
     if (!name.trim() || !location.trim() || !date || !time) {
       setError("⚠️ All fields are required!");
       return;
@@ -29,8 +37,9 @@ function MeetupForm() {
       await addDoc(collection(db, "meetups"), {
         name: name.trim(),
         location: location.trim(),
-        date: date.toISOString().split("T")[0], 
+        date: date.toISOString().split("T")[0],
         time: time.trim(),
+        createdBy: user.email, // ✅ Store who created the meetup
       });
 
       // ✅ Reset form fields
@@ -53,6 +62,9 @@ function MeetupForm() {
 
       {/* ✅ Display error messages */}
       {error && <p className="error-message">{error}</p>}
+
+      {/* ✅ Show Sign-In Warning if Not Logged In */}
+      {!user && <p className="signin-warning">🔒 Sign in to create a meetup</p>}
 
       {/* ✅ Meetup Name Input */}
       <label htmlFor="meetup-name">Meetup Name</label>
@@ -111,7 +123,7 @@ function MeetupForm() {
       </select>
 
       {/* ✅ Submit Button */}
-      <button type="submit" disabled={loading}>
+      <button type="submit" disabled={loading || !user}>
         {loading ? "Submitting..." : "➕ Add Meetup"}
       </button>
     </form>
